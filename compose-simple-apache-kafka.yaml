@@ -1,0 +1,26 @@
+services:
+  kafka:
+    image: apache/kafka:4.1.0
+    container_name: broker-1
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      KAFKA_KRAFT_MODE: "true"  # Active le mode KRaft.
+      KAFKA_PROCESS_ROLES: controller,broker  # Kafka agit à la fois comme contrôleur et broker.
+      KAFKA_NODE_ID: 1  # ID unique pour l’instance Kafka.
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@localhost:9093"  # Quorum du contrôleur.
+      KAFKA_LISTENERS: PLAINTEXT://localhost:9092,CONTROLLER://localhost:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LOG_DIRS: /var/lib/kafka/data  # Emplacement de stockage des journaux (logs).
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"  # Active la création automatique des topics.
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1  # Réplication simple (un seul replica, pour simplifier).
+      KAFKA_LOG_RETENTION_HOURS: 168  # Période de rétention des journaux (7 jours).
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0  # Aucun délai pour le rééquilibrage initial.
+      CLUSTER_ID: "Mk3OEYBSD34fcwNTJENDM2Qk"  # ID unique du cluster Kafka.
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/var/lib/kafka/data  # Monte les journaux (logs) dans un dossier local.
