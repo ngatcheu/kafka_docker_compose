@@ -20,7 +20,6 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1  # Réplication simple (un seul replica, pour simplifier).
       KAFKA_LOG_RETENTION_HOURS: 168  # Période de rétention des journaux (7 jours).
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0  # Aucun délai pour le rééquilibrage initial.
-      CLUSTER_ID: "Mk3OEYBSD34fcwNTJENDM2Qk"  # ID unique du cluster Kafka.
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data:/var/lib/kafka/data  # Monte les journaux (logs) dans un dossier local.

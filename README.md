@@ -43,6 +43,7 @@ Ce tableau décrit les principales variables de configuration :
   docker exec --workdir /opt/kafka/bin/ -it controller-2 sh
   docker exec --workdir /opt/kafka/bin/ -it controller-3 sh
   ```
+
 🔹 Scénario 1 : Réplication des données
   Créer 3 topics a partir le broker 1 répliqué (3 brokers)
   ```
@@ -116,38 +117,53 @@ Ce tableau décrit les principales variables de configuration :
    ```
   👉 Tu devrais voir broker-1 de nouveau dans la liste des ISR (in-sync replicas).
 
+
 🔹 Scénario 3 : Tolérance aux pannes des Controllers
    Vérifier quel controller est leader
-   ```docker exec --workdir /opt/kafka/bin/ -it controller-1 sh
+
+ ```
+   docker exec --workdir /opt/kafka/bin/ -it controller-1 sh docker start broker-1
    ```
 
-    ```./kafka-metadata-quorum.sh --bootstrap-server broker-1:19092 describe --status
-    ```
+ ```
+   ./kafka-metadata-quorum.sh --bootstrap-server broker-1:19092 describe --status
+   ```
 
  👉 Regarde la ligne Leader Id.
 
     Stopper le controller leader
 
-    ``` docker stop controller-2
-    ```
+ ```
+   docker stop controller-2
+   ```
 
     Vérifier la nouvelle élection
 
-    ```docker exec --workdir /opt/kafka/bin/ -it controller-1 sh
-    ```
-    ```./kafka-metadata-quorum.sh --bootstrap-server broker-1:19092 describe --status
-    ```
+ ```
+   docker exec --workdir /opt/kafka/bin/ -it controller-1 sh
+   ```
+ ```
+   ./kafka-metadata-quorum.sh --bootstrap-server broker-1:19092 describe --status
+   ```
+   
   👉 Tu verras que controller-1 est maintenant leader.
 
     Redémarrer le controller
-
-    ```docker start controller-2
-    ```
+ ```
+   docker start controller-2
+   ```
     Puis revérifier avec la commande describe --status.
 
-    ```./kafka-metadata-quorum.sh --bootstrap-server broker-1:19092 describe --status
-    ```
-
+ ```
+   ./kafka-metadata-quorum.sh --bootstrap-server broker-1:19092 describe --status
+   ```
     Deux situations se presentes soit 
     * il est follower 
     * ou alors leader apres une reelection
+
+# Liens Utiles
+- [Apache kafka Documentation](https://kafka.apache.org/documentation)
+- [Docker compose Apache kafka](https://hub.docker.com/r/apache/kafka)
+- [Kafkio ui](https://kafkio.com)
+
+
